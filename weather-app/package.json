@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "postman-request": "^2.88.1-postman.31"
+    "postman-request": "^2.88.1-postman.31",
+    "yargs": "^17.6.2"
   },
   "name": "weather-app",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
