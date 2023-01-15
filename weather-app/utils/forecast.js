@@ -17,9 +17,9 @@ const request = require("postman-request");
 // });
 
 const forecast = (latitude, longitude, callback) => {
-    const url = `http://api.weatherstack.com/current?access_key=0353de7307be4eee4eb9e53769f0b567&query=${latitude},${longitude}&units=f`;
+    const url = `http://api.weatherstack.com/current?access_key=0353de7307be4eee4eb9e53769f0b567&query=${latitude},${longitude}&units=m`;
 
-    request({ url: url, json: true }, (error, { body }) => {
+    request({ url, json: true }, (error, { body }) => {
         if (error) {
             callback("Unable to connect to weather service!", undefined);
         } else if (body.error) {

@@ -24,7 +24,7 @@ const geocode = (address, callback) => {
         address
     )}&format=json&limit=1`;
 
-    request({ url: url, json: true }, (error, { body }) => {
+    request({ url, json: true }, (error, { body }) => {
         if (error) {
             callback("Unable to connect to location services!", undefined);
         } else if (body.error) {
