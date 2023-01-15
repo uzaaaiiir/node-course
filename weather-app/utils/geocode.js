@@ -24,16 +24,16 @@ const geocode = (address, callback) => {
         address
     )}&format=json&limit=1`;
 
-    request({ url: url, json: true }, (error, response) => {
+    request({ url: url, json: true }, (error, { body }) => {
         if (error) {
             callback("Unable to connect to location services!", undefined);
-        } else if (response.body.error) {
+        } else if (body.error) {
             callback("Unable to find location. Try another search.", undefined);
         } else {
             callback(undefined, {
-                latitude: response.body[0].lat,
-                longitude: response.body[0].lon,
-                location: response.body[0].display_name,
+                latitude: body[0].lat,
+                longitude: body[0].lon,
+                location: body[0].display_name,
             });
         }
     });

@@ -8,20 +8,24 @@ const address = process.argv[2];
 if (!address) {
     console.log("Please provide an address.");
 } else {
-    geocode(address, (error, data) => {
+    geocode(address, (error, { latitude, longitude, location } = {}) => {
         if (error) {
             return console.log(error);
         }
 
-        forecast(data.latitude, data.longitude, (error, forecastData) => {
-            if (error) {
-                return console.log(error);
-            }
+        forecast(
+            latitude,
+            longitude,
+            (error, { weatherDescription, temperature, feelsLike }) => {
+                if (error) {
+                    return console.log(error);
+                }
 
-            console.log(data.location);
-            console.log(
-                `${forecastData.weatherDescription}. It is currently ${forecastData.temperature} degrees out. It feels like ${forecastData.feelsLike} degrees out.`
-            );
-        });
+                console.log(location);
+                console.log(
+                    `${weatherDescription}. It is currently ${temperature} degrees out. It feels like ${feelsLike} degrees out.`
+                );
+            }
+        );
     });
 }
