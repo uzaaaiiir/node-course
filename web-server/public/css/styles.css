@@ -1,16 +1,43 @@
-html {
-    font-size: 62.5%;
+body {
+    color: #333;
+    font-family: Arial;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 0 16px;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
 }
 
-* {
-    box-sizing: border-box;
+.main-content {
+    flex-grow: 1;
+}
+
+footer {
+    color: #888;
+    border-top: 1px solid #eee;
+    margin-top: 16px;
+    padding: 16px 0;
+}
+
+header {
+    margin-top: 16px;
+    margin-bottom: 48px;
 }
 
 h1 {
-    color: grey;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 64px;
+    margin-bottom: 16px;
 }
 
-img {
-    max-width: 25rem;
+header a {
+    color: #888;
+    margin-right: 16px;
+    text-decoration: none;
+}
+
+.portrait {
+    width: 250px;
 }

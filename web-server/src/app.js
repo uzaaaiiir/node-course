@@ -46,6 +46,24 @@ app.get("/weather", (req, res) => {
     });
 });
 
+// 404 for any help route not found
+app.get("/help/*", (req, res) => {
+    res.render("404", {
+        errorMessage: "Help article not found.",
+    });
+});
+
+// 404 for any route not found
+app.get("*", (req, res) => {
+    // renders a view, sends an object
+    res.render("404", {
+        title: "404",
+        name: "Uzair Mohiuddin",
+        errorMessage: "Page not found.",
+    });
+});
+
+// Starts up server
 app.listen(3000, () => {
     console.log(`Server is up on port ${3000}.`);
 });
