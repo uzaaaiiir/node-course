@@ -35,3 +35,25 @@ doWorkPromise
     .catch((error) => {
         console.log("Error!", error);
     });
+
+// Promise Chaining
+const add = (a, b) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(a + b);
+        }, 2000);
+    });
+};
+
+add(1, 2)
+    .then((sum) => {
+        console.log(sum);
+        return add(sum, 5);
+        // returns a new promise, allows the chained then to be executed if resolved
+    })
+    .then((sum) => {
+        console.log(sum);
+    })
+    .catch((e) => {
+        console.log(e);
+    });
