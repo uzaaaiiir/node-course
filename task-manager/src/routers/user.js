@@ -1,10 +1,7 @@
 const express = require("express");
-
-// User data model
-const User = require("../models/user");
-
-// User router
-const router = new express.Router();
+const User = require("../models/user"); // Data Model
+const auth = require("../middleware/auth");
+const router = new express.Router(); // Router
 
 // POST request for users [create User]
 router.post("/users", async (req, res) => {
@@ -13,23 +10,34 @@ router.post("/users", async (req, res) => {
     try {
         await user.save();
 
+        const token = await user.generateAuthToken();
+
         // Only executes when save is fulfilled
-        res.status(201).send(user);
+        res.status(201).send({ user, token });
     } catch (e) {
         // Executes when save is rejected
         res.status(400).send(e);
     }
 });
 
-// GET request for users [read user]
-router.get("/users", async (req, res) => {
+// POST request for users [login]
+router.post("/users/login", async (req, res) => {
     try {
-        const users = await User.find({});
+        const user = await User.findByCredentials(
+            req.body.email,
+            req.body.password
+        );
+        const token = await user.generateAuthToken();
 
-        res.send(users);
+        res.send({ user, token });
     } catch (e) {
-        res.status(500).send();
+        res.status(400).send();
     }
+});
+
+// GET request for users [read user]
+router.get("/users/me", auth, async (req, res) => {
+    res.send(req.user);
 });
 
 router.get("/users/:id", async (req, res) => {
@@ -56,10 +64,15 @@ router.patch("/users/:id", async (req, res) => {
     }
 
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
+        // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, });
+
+        const user = await User.findById(req.params.id);
+
+        updates.forEach((updateField) => {
+            user[updateField] = req.body[updateField];
         });
+
+        await user.save();
 
         !user ? res.status(404).send() : res.send(user);
     } catch (e) {

@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-// create Task model
-const Task = mongoose.model("Task", {
+// create Task schema
+const taskSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
@@ -12,5 +13,16 @@ const Task = mongoose.model("Task", {
         default: false,
     },
 });
+
+// middleware
+taskSchema.pre("save", async function (next) {
+    const task = this;
+
+    console.log("middleware");
+    next();
+});
+
+// create Task model
+const Task = mongoose.model("Task", taskSchema);
 
 module.exports = Task;
