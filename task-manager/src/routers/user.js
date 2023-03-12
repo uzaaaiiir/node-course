@@ -35,6 +35,32 @@ router.post("/users/login", async (req, res) => {
     }
 });
 
+// POST request for users [logout]
+router.post("/users/logout", auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token;
+        });
+
+        await req.user.save();
+
+        res.send();
+    } catch (e) {
+        res.status(500).send();
+    }
+});
+
+// logout of all sessions
+router.post("/users/logoutAll", auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+        res.send();
+    } catch (e) {
+        res.status(500).send();
+    }
+});
+
 // GET request for users [read user]
 router.get("/users/me", auth, async (req, res) => {
     res.send(req.user);
