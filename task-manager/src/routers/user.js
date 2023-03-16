@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/user"); // Data Model
 const auth = require("../middleware/auth");
+const multer = require("multer");
 const router = new express.Router(); // Router
 
 // POST request for users [create User]
@@ -66,19 +67,8 @@ router.get("/users/me", auth, async (req, res) => {
     res.send(req.user);
 });
 
-router.get("/users/:id", async (req, res) => {
-    const _id = req.params.id;
-
-    try {
-        const user = await User.findById(_id);
-        !user ? res.status(404).send() : res.status(200).send(user);
-    } catch (e) {
-        res.status(500).send();
-    }
-});
-
 // PATCH request for users [update user]
-router.patch("/users/:id", async (req, res) => {
+router.patch("/users/me", auth, async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ["name", "email", "password", "age"];
     const isValidOperation = updates.every((update) => {
@@ -90,31 +80,44 @@ router.patch("/users/:id", async (req, res) => {
     }
 
     try {
-        // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, });
-
-        const user = await User.findById(req.params.id);
-
         updates.forEach((updateField) => {
-            user[updateField] = req.body[updateField];
+            req.user[updateField] = req.body[updateField];
         });
 
-        await user.save();
-
-        !user ? res.status(404).send() : res.send(user);
+        await req.user.save();
+        res.send(req.user);
     } catch (e) {
         res.status(400).send();
     }
 });
 
 // DELETE request for users [delete user]
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/me", auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
-
-        !user ? res.status(404).send() : res.send(user);
+        await req.user.remove();
+        res.send(req.user);
     } catch (e) {
         res.status(500).send();
     }
+});
+
+// upload photo
+const upload = multer({
+    dest: "avatars",
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error("Please upload an image"));
+        }
+
+        cb(undefined, true);
+    },
+});
+
+router.post("/users/me/avatar", upload.single("avatar"), (req, res) => {
+    res.send();
 });
 
 module.exports = router;
