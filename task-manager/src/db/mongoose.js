@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const connection = "mongodb://127.0.0.1:27017/task-manager-api";
+const connection = process.env.MONGODB_URL;
 const options = {
     useNewUrlParser: true,
 };
